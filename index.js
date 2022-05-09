@@ -27,7 +27,7 @@ async function run(){
             const foods = await cursor.toArray();
             res.send(foods);
         })
-
+            //read single data 
         app.get('/foods/:id',async(req,res)=>{
             const id=req.params.id;
             const query={_id:ObjectId(id)};
@@ -50,14 +50,14 @@ async function run(){
         //update manage items
         app.put('/foods/:id',async(req,res)=>{
             const id=req.params.id;
-            const userUpdate=req.body;
+            const userUpdates=req.body;
             const filter={_id:ObjectId(id)};
             const options={upsert:true};
             const updated={
                 $set:{
-                    name:userUpdate.name,
-                    quantity:userUpdate.quantity,
-                    price:userUpdate.price
+                    name:userUpdates.name,
+                    quantity:userUpdates.quantity,
+                    price:userUpdates.price
                 }
             }
             const foods=await foodsCollecton.updateOne(filter,updated,options);
