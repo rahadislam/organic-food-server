@@ -53,14 +53,14 @@ async function run(){
             const userUpdates=req.body;
             const filter={_id:ObjectId(id)};
             const options={upsert:true};
-            const updated={
+            const updateing={
                 $set:{
                     name:userUpdates.name,
                     quantity:userUpdates.quantity,
                     price:userUpdates.price
                 }
             }
-            const foods=await foodsCollecton.updateOne(filter,updated,options);
+            const foods=await foodsCollecton.updateOne(filter,updateding,options);
             res.send(foods);
         })
     }
