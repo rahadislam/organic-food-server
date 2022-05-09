@@ -1,5 +1,5 @@
 const express = require('express');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion,ObjectId } = require('mongodb');
 const app=express();
 const port=process.env.PORT || 5000;
 
@@ -27,11 +27,41 @@ async function run(){
             const foods = await cursor.toArray();
             res.send(foods);
         })
+
+        app.get('/foods/:id',async(req,res)=>{
+            const id=req.params.id;
+            const query={_id:ObjectId(id)};
+            const foods=await foodsCollecton.findOne(query);
+            res.send(foods);
+        })
         //inser add items db
         app.post('/foods',async(req,res)=>{
             const food=req.body;
             const result=await foodsCollecton.insertOne(food);
             res.send(result);
+        })
+        //Delete manage items
+        app.delete('/foods/:id',async(req,res)=>{
+            const id=req.params.id;
+            const query={_id:ObjectId(id)};
+            const foods=await foodsCollecton.deleteOne(query);
+            res.send(foods);
+        })
+        //update manage items
+        app.put('/foods/:id',async(req,res)=>{
+            const id=req.params.id;
+            const userUpdate=req.body;
+            const filter={_id:ObjectId(id)};
+            const options={upsert:true};
+            const updated={
+                $set:{
+                    name:userUpdate.name,
+                    quantity:userUpdate.quantity,
+                    price:userUpdate.price
+                }
+            }
+            const foods=await foodsCollecton.updateOne(filter,updated,options);
+            res.send(foods);
         })
     }
     finally{
